@@ -1,0 +1,39 @@
+[project]
+name = "itmo-mlsd"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "makanov.artem",email = "makanov.artem@rwb.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "black (>=25.11.0,<26.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 90                   # Максимальная длина строки
+target-version = ['py311']         # Целевые версии Python
+include = '\.pyi?$'                # Какие файлы форматировать (регулярное выражение)
+exclude = '''
+/(
+  \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | migrations
+  | __pycache__
+)/
+'''                              # Что исключить из форматирования (регулярное выражение)
+skip-string-normalization = true  # Не менять кавычки в строках
+
+[dependency-groups]
+dev = [
+    "ruff (>=0.14.5,<0.15.0)"
+]
