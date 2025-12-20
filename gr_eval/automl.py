@@ -2,7 +2,6 @@
 import optuna
 import mlflow
 from gr_eval.metrics import compute_metrics
-from gr_eval.llm import HFSmallLLM
 from gr_eval.prompt_generator import PromptGenerator
 from gr_eval.prompt_space import sample_prompt_spec
 
@@ -31,7 +30,7 @@ def automl_gr(llm, df_train, n_trials=30):
         # 🔥 каждый trial — отдельный run
         with mlflow.start_run(nested=True):
             mlflow.log_params(trial.params)
-            mlflow.log_metric("val_rocauc", f1)
+            mlflow.log_metric("train_f1", f1)
             mlflow.log_text(system_prompt, "system_prompt.txt")
 
         trial.set_user_attr("system_prompt", system_prompt)

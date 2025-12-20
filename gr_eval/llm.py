@@ -44,17 +44,14 @@ You are a tool for support, not harm. You can distinguish human complexity from 
 class HFSmallLLM(BaseLLM):
     """
     Маленькая instruction-tuned LLM для GR экспериментов.
-    CPU-only, детерминированная.
     """
 
     def __init__(
         self,
         model_name: str = "google/flan-t5-small",
-        max_new_tokens: int = 64,
         device: str = "cpu",
     ):
         self.device = device
-        self.max_new_tokens = max_new_tokens
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name,)
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
@@ -62,7 +59,7 @@ class HFSmallLLM(BaseLLM):
         self.model.eval()
 
     @torch.no_grad()
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str, max_new_tokens: int = 64) -> str:
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
@@ -76,7 +73,7 @@ class HFSmallLLM(BaseLLM):
 
         generated_ids = self.model.generate(
             **model_inputs,
-            max_new_tokens=64
+            max_new_tokens=max_new_tokens
         )
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
