@@ -1,5 +1,5 @@
 from gr_eval.llm import HFSmallLLM
-from gr_eval.meta_prompt import PromptSpec
+from gr_eval.prompt_spec import PromptSpec
 from gr_eval.meta_prompt import META_PROMPT
 
 

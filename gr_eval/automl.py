@@ -4,15 +4,10 @@ import mlflow
 from gr_eval.metrics import compute_metrics
 from gr_eval.llm import HFSmallLLM
 from gr_eval.prompt_generator import PromptGenerator
-from gr_eval.prompt_space import sample_prompt, sample_prompt_spec
+from gr_eval.prompt_space import sample_prompt_spec
 
-
+ 
 def automl_gr(llm, df_train, n_trials=30):
-
-    llm = HFSmallLLM(
-        model_name="google/flan-t5-small",
-        max_new_tokens=256,
-    )
 
     prompt_generator = PromptGenerator(llm)
     
@@ -28,7 +23,7 @@ def automl_gr(llm, df_train, n_trials=30):
             refused = llm.refused(response)
 
             y_true.append(1.0 if refused else 0.0)
-            y_score.append(row["harmful"])
+            y_score.append(row["label"])
 
         metrics = compute_metrics(y_true, y_score)
         f1 = metrics['f1']
