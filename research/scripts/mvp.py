@@ -20,7 +20,7 @@ with mlflow.start_run(run_name="automl_gr_tpe"):
     study = automl_gr(
         llm=llm,
         df_train=train,
-        n_trials=30,
+        n_trials=100,
     )
 
     best_prompt = study.best_trial.user_attrs["system_prompt"]
@@ -45,4 +45,9 @@ for _, row in test.iterrows():
     y_true.append(row["label"])
 
 final_metrics = compute_metrics(y_true, y_pred, y_score)
+
+mlflow.log_metric("test_f1", final_metrics['f1'])
+mlflow.log_metric("test_precision", final_metrics['precision'])
+mlflow.log_metric("test_recall", final_metrics['recall'])
+
 print("LLM + AutoML GR (test):", final_metrics)

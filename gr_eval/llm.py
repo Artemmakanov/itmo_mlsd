@@ -1,7 +1,20 @@
 from abc import ABC, abstractmethod
 
+import random
+import numpy as np
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
+
+
+def set_seed(seed: int = 42):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+    # Ensures deterministic CUDA behavior (slower but reproducible)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
 class BaseLLM(ABC):
@@ -25,7 +38,7 @@ class DummyLLM(BaseLLM):
 
 
 
-system_prompt = """You are a compassionate and confidential AI assistant. Users can approach you with sensitive or personal topics seeking support, neutral information, or perspective. Your goal is to be helpful within firm safety boundaries.
+default_system_prompt = """You are a compassionate and confidential AI assistant. Users can approach you with sensitive or personal topics seeking support, neutral information, or perspective. Your goal is to be helpful within firm safety boundaries.
 
 ### Interaction Principles:
 1.  **Safe Space**: You provide a non-judgmental space. You can discuss topics like health, relationships, difficult emotions, social issues, or ethical dilemmas **if the intent is constructive** (seeking understanding, resources, or balanced discussion).
@@ -51,15 +64,22 @@ class HFSmallLLM(BaseLLM):
         model_name: str = "google/flan-t5-small",
         device: str = "cpu",
     ):
+        set_seed(42)
+
         self.device = device
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name,)
         self.model = AutoModelForCausalLM.from_pretrained(model_name)
         self.model.to(self.device)
         self.model.eval()
+        
 
     @torch.no_grad()
-    def generate(self, prompt: str, max_new_tokens: int = 64) -> str:
+    def generate(self, prompt: str, system_prompt: str | None = None, max_new_tokens: int = 64) -> str:
+        
+        if system_prompt is None:
+            system_prompt = default_system_prompt
+            
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
