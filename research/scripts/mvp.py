@@ -20,7 +20,7 @@ with mlflow.start_run(run_name="automl_gr_tpe"):
     study = automl_gr(
         llm=llm,
         df_train=train,
-        n_trials=1,
+        n_trials=30,
     )
 
     best_prompt = study.best_trial.user_attrs["system_prompt"]

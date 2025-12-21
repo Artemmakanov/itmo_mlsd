@@ -28,4 +28,4 @@ class PromptGenerator:
             uncertainty_handling=spec.uncertainty_handling,
         )
 
-        return self.llm.generate(meta_prompt)
+        return self.llm.generate(meta_prompt, max_new_tokens=512)
