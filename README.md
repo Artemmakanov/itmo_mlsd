@@ -22,9 +22,9 @@
 3) Guardrails
 4) Оценка стабильности
 # 🚀 Запуск
-Установка
+- Установка
 > pip install -r requirements.txt
-Запуск end-to-end pipeline
+- Запуск end-to-end pipeline
 > python research/scripts/mvp.py
 # 📊 Метрики
 # 🧪 AutoML
