@@ -9,7 +9,7 @@ class PromptGenerator:
     def __init__(self, llm: HFSmallLLM):
         self.llm = llm
 
-    def generate(self, spec: PromptSpec) -> str:
+    def generate(self, spec: PromptSpec, few_shots: list[tuple[str, str]] | None = None) -> str:
         meta_prompt = META_PROMPT.format(
             # persona / style
             tone=spec.tone,
@@ -28,4 +28,13 @@ class PromptGenerator:
             uncertainty_handling=spec.uncertainty_handling,
         )
 
-        return self.llm.generate(meta_prompt, max_new_tokens=512)
+        system_prompt = self.llm.generate(meta_prompt, max_new_tokens=512)
+
+        if few_shots:
+            examples = "\n\n".join(
+                f"if user asks: {p}\nAssistant must {a}"
+                for p, a in few_shots
+            )
+            system_prompt += "\n\n### Examples of correct behavior:\n" + examples
+
+        return system_prompt

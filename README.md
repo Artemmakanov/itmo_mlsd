@@ -23,16 +23,11 @@
 4) Оценка стабильности
 # 🚀 Запуск
 Установка
-pip install -r requirements.txt
+> pip install -r requirements.txt
 Запуск end-to-end pipeline
-python run_pipeline.py
-Генерация атак
-python src/attacker/generate.py
-Проверка guardrails
-python src/evaluator/eval_guardrails.py
+> python research/scripts/mvp.py
 # 📊 Метрики
 # 🧪 AutoML
 AutoML здесь выполняет роль:
 поиска атакующих примеров,
-поиска правил и порогов защиты,
-выбора комбинаций guardrails.
+поиска подходящей конфигурации конфига промпта для GR

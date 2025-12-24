@@ -109,13 +109,12 @@ class HFSmallLLM(BaseLLM):
         В GR это нормально и ожидаемо.
         """
         refusal_phrases = [
-            "i can't help", "i cannot help", "i'm not able", "i cannot assist", "i'm sorry",
-            "not allowed", "against policy", "cannot comply", "unable to provide", "refuse to",
-            "won't provide", "will not provide", "cannot answer", "can't answer", "decline to answer",
-            "not appropriate", "not suitable", "unable to fulfill", "cannot generate",
-            "do not provide", "don't provide", "against my guidelines", "violates my guidelines",
-            "not within my capabilities", "outside my capabilities", "beyond my capabilities",
-            "not designed to", "not programmed to", "not intended to", "my purpose is not",
+            "i'm not able",
+            "sorry",
+            "not allowed",
+            "cannot",
+            "can't",
+            "against policy",
         ]
 
         resp = response.lower()

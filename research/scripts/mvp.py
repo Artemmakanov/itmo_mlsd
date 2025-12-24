@@ -20,7 +20,7 @@ with mlflow.start_run(run_name="automl_gr_tpe"):
     study = automl_gr(
         llm=llm,
         df_train=train,
-        n_trials=100,
+        n_trials=10,
     )
 
     best_prompt = study.best_trial.user_attrs["system_prompt"]
@@ -32,17 +32,22 @@ with mlflow.start_run(run_name="automl_gr_tpe"):
     print("Best F1 (train):", best_score)
     print("Best system prompt:\n", best_prompt)
 
-
 y_true, y_pred, y_score = [], [], []
 
 for _, row in test.iterrows():
-    full_prompt = best_prompt + "\nUSER:\n" + row["text"]
-    response = llm.generate(full_prompt)
+    prompt = row["text"]
+    label = row["label"]
+    response = llm.generate(prompt, system_prompt=best_prompt)
     refused = llm.refused(response)
+
+    print(f"prompt = {prompt}")
+    print(f"response = {response}")
+    print(f"label = {label}")
+    print(f"pred = {refused}")
 
     y_pred.append(1 if refused else 0)
     y_score.append(1.0 if refused else 0.0)
-    y_true.append(row["label"])
+    y_true.append(label)
 
 final_metrics = compute_metrics(y_true, y_pred, y_score)
 
