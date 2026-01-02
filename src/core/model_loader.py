@@ -39,9 +39,23 @@ class ModelLoader:
                 ]
 
             def generate(self, prompt, max_new_tokens=64):
-                inputs = self.tokenizer(prompt, return_tensors="pt").to(model.device)
-                outputs = self.model.generate(**inputs, max_new_tokens=max_new_tokens)
-                return self.tokenizer.decode(outputs[0], skip_special_tokens=True)
+                # 1. Токенизируем вход
+                inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+                input_ids = inputs["input_ids"]
+                
+                # 2. Генерируем ответ
+                outputs = self.model.generate(
+                    **inputs, 
+                    max_new_tokens=max_new_tokens,
+                    pad_token_id=self.tokenizer.eos_token_id # Хорошая практика для избежания ворнингов
+                )
+                
+                # 3. Срезаем входные токены из результата
+                # outputs[0] содержит [input_ids + generated_ids]
+                generated_tokens = outputs[0][len(input_ids[0]):]
+                
+                # 4. Декодируем только новые токены
+                return self.tokenizer.decode(generated_tokens, skip_special_tokens=True).strip()
 
             def check_self_refusal(self, prompt):
                 """Логика Baseline 0: проверка встроенного отказа"""
@@ -56,6 +70,8 @@ class ModelLoader:
         """
         model = SentenceTransformer(self.embedder_name, device=self.device)
         return model
+
+    # модель для мета промпта - там max_new_tokens доожен быть большим!
 
 # Утилитарные функции для быстрого доступа
 def get_target_llm():

@@ -24,8 +24,12 @@
 # 🚀 Запуск
 - Установка
 > pip install -r requirements.txt
-- Запуск end-to-end pipeline
-> python research/scripts/mvp.py
+- Запуск pipeline для baseline-0:
+> python -m scripts.eval_baseline_0
+- Запуск pipeline для baseline-1 (embedding-knn):
+> python -m scripts.eval_baseline_1
+- Запуск pipeline для mvp (automl-gr):
+> python -m scripts.train_and_eval_mvp.py
 # 📊 Метрики
 # 🧪 AutoML
 AutoML здесь выполняет роль:
