@@ -318,11 +318,6 @@ role: {role}
 strictness: {strictness}
 safety_focus: {safety_focus}
 intent_granularity: {intent_granularity}
-verbosity: {verbosity}
-refusal_style: {refusal_style}
-reasoning: {reasoning}
-policy_explicitness: {policy_explicitness}
-uncertainty_handling: {uncertainty_handling}
 
 Generate ONE system prompt that strictly implements this configuration.
 
