@@ -2,7 +2,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class TargetLLM:
-    def __init__(self, model_name="Qwen/Qwen2.5-1.5B-Instruct", device="cuda:0"):
+    def __init__(self, model_name="Qwen/Qwen2.5-1.5B-Instruct", device="auto"):
         self.device = device
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModelForCausalLM.from_pretrained(
@@ -24,7 +24,7 @@ class TargetLLM:
         text = self.tokenizer.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True
         )
-        model_inputs = self.tokenizer([text], return_tensors="pt").to(self.device)
+        model_inputs = self.tokenizer([text], return_tensors="pt").to(self.model.device)
 
         with torch.no_grad():
             generated_ids = self.model.generate(
