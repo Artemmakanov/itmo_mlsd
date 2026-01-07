@@ -30,7 +30,10 @@ class TargetLLM:
             generated_ids = self.model.generate(
                 model_inputs.input_ids, 
                 max_new_tokens=max_new_tokens,
-                pad_token_id=self.tokenizer.eos_token_id
+                pad_token_id=self.tokenizer.eos_token_id,
+                # Константные настройки:
+                do_sample=False,   # Отключаем случайность (Greedy Search)
+                num_beams=1        # Отключаем многолучевой поиск
             )
         
         response = self.tokenizer.batch_decode(
