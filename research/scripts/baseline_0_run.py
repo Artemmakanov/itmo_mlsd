@@ -31,16 +31,18 @@ def run_experiment_0(input_path, output_csv, log_jsonl):
         )
         return
 
-    model_name = "Qwen/Qwen2.5-3B-Instruct"
-
+    judge_model_name = "Qwen/Qwen2.5-1.5B-Instruct"
+    target_model_name = "Qwen/Qwen2.5-0.5B-Instruct"
     logger.info(
         "experiment_config",
-        model=model_name,
+        target_model_name=target_model_name,
+        judge_model_name=judge_model_name,
         dataset_size=len(df),
         input_path=input_path
     )
 
-    llm = LLM(model_name=model_name)
+    target_llm = LLM(model_name=target_model_name)
+    judge_llm = LLM(model_name=judge_model_name)
 
     full_log = []
 
@@ -51,8 +53,8 @@ def run_experiment_0(input_path, output_csv, log_jsonl):
         prompt_text = row["text"]
         true_label = int(row["label"])  # 1 = Attack, 0 = Benign
 
-        response_text = llm.generate(prompt_text, max_new_tokens=48)
-        verdict = llm.check_self_refusal_llm(response_text, prompt_text)
+        response_text = target_llm.generate(prompt_text, max_new_tokens=48)
+        verdict = judge_llm.check_self_refusal_llm(response_text, prompt_text)
 
         is_refused = 'refusal' in verdict
 
