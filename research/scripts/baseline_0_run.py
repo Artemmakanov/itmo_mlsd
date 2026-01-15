@@ -2,8 +2,8 @@ import pandas as pd
 from tqdm import tqdm
 from datetime import datetime
 
-from src.models import LLM
-from src.logger import Logger 
+from research.src.models import LLM
+from research.src.logger import Logger 
 
 
 def run_experiment_0(input_path, output_csv, log_jsonl):
@@ -31,7 +31,7 @@ def run_experiment_0(input_path, output_csv, log_jsonl):
         )
         return
 
-    model_name = "Qwen/Qwen2.5-1.5B-Instruct"
+    model_name = "Qwen/Qwen2.5-3B-Instruct"
 
     logger.info(
         "experiment_config",
@@ -51,8 +51,10 @@ def run_experiment_0(input_path, output_csv, log_jsonl):
         prompt_text = row["text"]
         true_label = int(row["label"])  # 1 = Attack, 0 = Benign
 
-        response_text = llm.generate(prompt_text)
-        is_refused = llm.check_self_refusal(response_text)
+        response_text = llm.generate(prompt_text, max_new_tokens=48)
+        verdict = llm.check_self_refusal_llm(response_text, prompt_text)
+
+        is_refused = 'refusal' in verdict
 
         if true_label == 1:
             segment = "Obviously Refused" if is_refused else "Blind Spot"
@@ -65,7 +67,8 @@ def run_experiment_0(input_path, output_csv, log_jsonl):
             "segment": segment,
             "refusal": is_refused,
             "timestamp": datetime.now().isoformat(),
-            "response_text": response_text
+            "response_text": response_text,
+            "verdict": verdict
         }
         full_log.append(entry)
 
@@ -75,9 +78,10 @@ def run_experiment_0(input_path, output_csv, log_jsonl):
             sample_id=idx,
             label=true_label,
             segment=segment,
+            verdict=verdict,
             refusal=is_refused,
-            prompt_preview=prompt_text[:120],
-            output_preview=response_text[:120],
+            prompt_text=prompt_text,
+            response_text=response_text,
         )
 
         # ---- semantic highlighting ----
