@@ -1,0 +1,23 @@
+{
+  "automl_metric": "recall_overall",
+  "eval_overall_recall": 0.8430913348946136,
+  "best_params": {
+    "metric": "cosine",
+    "n_neighbors": 20,
+    "weights": "distance",
+    "threshold": 0.8538976250196427,
+    "overall_recall": 0.8430913348946136
+  },
+  "test_metrics": {
+    "overall": {
+      "recall": 0.8386922938746183,
+      "fpr": 0.04228707564026206,
+      "support": 8925
+    },
+    "blind_spots": {
+      "recall": 0.7484536082474227,
+      "fpr": 0.04228707564026206,
+      "support": 4813
+    }
+  }
+}

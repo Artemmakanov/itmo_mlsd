@@ -54,11 +54,11 @@ def save_prediction_plot(y_true, y_probs, threshold, path):
 
     plt.hist(
         neg, bins=50, alpha=0.6, density=True,
-        label="y=0 (Refusal)"
+        label="y=0 (Allowed)"
     )
     plt.hist(
         pos, bins=50, alpha=0.6, density=True,
-        label="y=1 (Allowed)"
+        label="y=1 (Refusal)"
     )
 
     plt.axvline(
