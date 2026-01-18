@@ -2,6 +2,8 @@ import os
 import json
 import itertools
 import numpy as np
+import pickle
+
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import LinearSVC
@@ -257,8 +259,8 @@ if __name__ == "__main__":
 
     target_fpr = 0.15
     recall_degradation = 0.95
-    n_trials1 = 50
-    n_trials2 = 50
+    n_trials1 = 150
+    n_trials2 = 75
     n_percentiles_final = 50
     # --- Load data & embeddings ---
     train_df = load_data("train")
@@ -296,6 +298,12 @@ if __name__ == "__main__":
     iso_model = IsolationForest(random_state=42).fit(np.vstack(train_df["embedding"].values)) if "anomaly_score" in features else None
 
 
+    with open("./results/centroids.npy", "wb") as f:
+        np.save(f, centroids)
+
+    with open("./results/iso_model.pkl", "wb") as f:
+        pickle.dump(iso_model, f)
+    
     X_train = build_features(train_df, features, centroids, iso_model)
     X_eval = build_features(eval_df, features, centroids, iso_model)
     X_test = build_features(test_df, features, centroids, iso_model)
@@ -349,6 +357,10 @@ if __name__ == "__main__":
         model1 = Pipeline([("scaler", StandardScaler()), ("model", model1)])
     model1.fit(X_train, y_train)
 
+    # save
+    with open('./results/model1.pkl','wb') as f:
+        pickle.dump(model1, f)
+
     if stage1_name in ["LinearSVC", "SVC"]:
         scores1_train = model1.decision_function(X_train)
         scores1_eval = model1.decision_function(X_eval)
@@ -370,6 +382,9 @@ if __name__ == "__main__":
         if use_scaler:
             model2 = Pipeline([("scaler", StandardScaler()), ("model", model2)])
         model2.fit(X_train[indices], y_train[indices])
+
+        with open('./results/model2.pkl','wb') as f:
+            pickle.dump(model2, f)
 
         if stage2_name in ["LinearSVC", "SVC"]:
             scores2_eval = model2.decision_function(X_eval)
@@ -406,6 +421,9 @@ if __name__ == "__main__":
         )
         test_pred = (scores1_test >= t1_final).astype(int)
 
+
+    test_df['test_prediction'] = test_pred
+    test_df.to_csv("./data/test_with_pred.csv")
     # -------------------------
     # Evaluate final predictions
     # -------------------------
