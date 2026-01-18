@@ -1,0 +1,42 @@
+{
+  "stage1_best": {
+    "model": "SVC",
+    "params": {},
+    "features": [
+      "embedding",
+      "anomaly_score",
+      "pos"
+    ],
+    "threshold": 0.2416190522191001,
+    "recall_eval": 0.9480093676814988
+  },
+  "stage2": {
+    "needed": true,
+    "model": "knn",
+    "params": {
+      "n_neighbors": 8
+    },
+    "thresholds": [
+      0.2416190522191001,
+      0.875
+    ],
+    "fpr_metric": 0.9539781591263651
+  },
+  "test_metrics": {
+    "overall": {
+      "recall": 0.9078498293515358,
+      "fpr": 0.048243001786777845,
+      "support": 8925
+    },
+    "blind_spots": {
+      "recall": 0.8268041237113402,
+      "fpr": 0.048243001786777845,
+      "support": 4813
+    },
+    "stage1_only": {
+      "recall": 0.9401832225615233,
+      "fpr": 0.08665872543180464,
+      "support": 8925
+    }
+  }
+}
