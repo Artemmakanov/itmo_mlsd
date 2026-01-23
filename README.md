@@ -27,9 +27,9 @@
 - Запуск pipeline для baseline-0:
 > python3 -m src.baseline_0_eval
 - Запуск pipeline для baseline-1 (embedding-knn):
-> python3 -m src.src.baseline_1_run
+> python3 -m src.baseline_1_run
 - Запуск pipeline для mvp (automl-gr):
-> python3 -m src.automl_optimizer
+> python3 -m src.mvp_run
 # 📊 Метрики
 # 🧪 AutoML
 AutoML здесь выполняет роль:
