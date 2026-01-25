@@ -25,11 +25,11 @@
 - Установка
 > pip install -r requirements.txt
 - Запуск pipeline для baseline-0:
-> python -m scripts.eval_baseline_0
+> python3 -m src.baseline_0_eval
 - Запуск pipeline для baseline-1 (embedding-knn):
-> python -m scripts.eval_baseline_1
+> python3 -m src.baseline_1_run
 - Запуск pipeline для mvp (automl-gr):
-> python -m scripts.train_and_eval_mvp.py
+> python3 -m src.mvp_run
 # 📊 Метрики
 # 🧪 AutoML
 AutoML здесь выполняет роль:
